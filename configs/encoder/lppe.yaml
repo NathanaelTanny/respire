@@ -1,0 +1,26 @@
+# Section document: the latent physiological pattern encoder.
+# Six selective blocks over a sixty-second window of twelve channels, cross-channel attention, and a
+# top-k sparse readout into sixteen latent dimensions with three named axes.
+
+encoder:
+  n_channels: 12
+  window_steps: 12
+  window_s: 60.0
+  n_blocks: 6
+  d_model: 64
+  d_state: 16
+  d_conv: 4
+  expand: 2
+  n_heads: 4
+  latent_dim: 16
+  axis_dim: 3
+  hidden_dim: 32
+  sparse_topk: 4
+  action_channels: 2
+  dropout: 0.0
+  lr: 0.0003
+  weight_decay: 0.0001
+  batch_size: 128
+  epochs: 8
+  interventional_weight: 0.5
+  one_step_horizon: 1

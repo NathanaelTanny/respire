@@ -1,0 +1,330 @@
+{
+  "paper": {
+    "title": "Recursive Self-Improving Reinforcement Learning with Latent Physiological Pattern Recognition for Closed-Loop Anaesthesia in Robotic Surgery",
+    "system": "ReSPIRe",
+    "venue_style": "Elsevier single-column manuscript, Pattern Recognition reference family",
+    "corpora": {
+      "vitaldb": "intraoperative records; 4,806 records of which 1,132 robot-assisted; 226 held out",
+      "mimic_iv": "4,124 admissions filtered to 1,876 episodes",
+      "eicu_crd": "cross-setting arm for hypotension and drug consumption",
+      "cohort": "2,000 Eleveld-Minto patients, 20,000 training and 2,000 evaluation episodes"
+    }
+  },
+  "counts": {
+    "claims": 36,
+    "mapped": 36
+  },
+  "overall": "COMPLETE_MAPPING",
+  "claims": [
+    {
+      "claim": "Eq. (1) reward",
+      "paper_ref": "Sec. 3.1",
+      "file": "src/respire/theatre/environment.py",
+      "line": 272,
+      "symbol": "reward = -depth_error - drug_cost",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (2) costs",
+      "paper_ref": "Sec. 3.1",
+      "file": "src/respire/theatre/environment.py",
+      "line": 274,
+      "symbol": "hypotension = (observed_map < self.theatre.map_floor)",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (2) rate variation",
+      "paper_ref": "Sec. 3.1",
+      "file": "src/respire/theatre/environment.py",
+      "line": 276,
+      "symbol": "variability = (clipped[:, 0] - state.previous_action[:, 0]).abs()",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (3) lower bound",
+      "paper_ref": "Sec. 3.2",
+      "file": "src/respire/control/certificate.py",
+      "line": 67,
+      "symbol": "def lower_bound",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (4) operator",
+      "paper_ref": "Sec. 3.2",
+      "file": "src/respire/training/policy_step.py",
+      "line": 54,
+      "symbol": "def constrained_step",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (5) coverage statement",
+      "paper_ref": "Proposition 1",
+      "file": "src/respire/control/certificate.py",
+      "line": 57,
+      "symbol": "def quantile",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (6) sample size",
+      "paper_ref": "Corollary 1",
+      "file": "src/respire/evaluation/theory.py",
+      "line": 18,
+      "symbol": "def corollary_sample_size",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (7) monotone bound",
+      "paper_ref": "Theorem 1",
+      "file": "src/respire/evaluation/theory.py",
+      "line": 35,
+      "symbol": "def theorem_bound",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eq. (8) cumulative bound",
+      "paper_ref": "Corollary 2",
+      "file": "src/respire/evaluation/theory.py",
+      "line": 59,
+      "symbol": "def cumulative_bound",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Algorithm 1 round loop",
+      "paper_ref": "Algorithm 1",
+      "file": "src/respire/training/round_loop.py",
+      "line": 233,
+      "symbol": "def run_recursion",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Algorithm 1 admission",
+      "paper_ref": "Algorithm 1 line 7-8",
+      "file": "src/respire/training/round_loop.py",
+      "line": 296,
+      "symbol": "admitted = certificate.evaluate(",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Algorithm 2 deployment",
+      "paper_ref": "Algorithm 2",
+      "file": "src/respire/control/deployment.py",
+      "line": 51,
+      "symbol": "class DeployedController",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Algorithm 2 shield call",
+      "paper_ref": "Algorithm 2 line 5",
+      "file": "src/respire/control/policy.py",
+      "line": 114,
+      "symbol": "outcome = self.shield(",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Selective SSM block",
+      "paper_ref": "Sec. 4.2",
+      "file": "src/respire/models/ssm.py",
+      "line": 48,
+      "symbol": "class SelectiveSSMBlock",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Cross-channel attention",
+      "paper_ref": "Sec. 4.2",
+      "file": "src/respire/models/attention.py",
+      "line": 16,
+      "symbol": "class CrossChannelAttention",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Sparse readout",
+      "paper_ref": "Fig. 2",
+      "file": "src/respire/models/encoder.py",
+      "line": 24,
+      "symbol": "class SparseReadout",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Heteroscedastic verifier",
+      "paper_ref": "Fig. 2",
+      "file": "src/respire/models/verifier.py",
+      "line": 19,
+      "symbol": "class ReturnVerifier",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Rectified flow policy",
+      "paper_ref": "Fig. 2",
+      "file": "src/respire/models/flow.py",
+      "line": 70,
+      "symbol": "class FlowPolicy",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Exact flow density",
+      "paper_ref": "Eq. (4)",
+      "file": "src/respire/models/flow.py",
+      "line": 135,
+      "symbol": "def log_prob",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "One-step pressure model",
+      "paper_ref": "Algorithm 1 line 1",
+      "file": "src/respire/models/pressure.py",
+      "line": 46,
+      "symbol": "class OneStepPressureModel",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Analytic shield",
+      "paper_ref": "Sec. 4",
+      "file": "src/respire/control/shield.py",
+      "line": 35,
+      "symbol": "class AnalyticShield",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Ridge adaptation",
+      "paper_ref": "Algorithm 2 line 1",
+      "file": "src/respire/control/adaptation.py",
+      "line": 24,
+      "symbol": "class RidgeAdapter",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Interventional loss",
+      "paper_ref": "Sec. 1, Table 2",
+      "file": "src/respire/losses/encoder_losses.py",
+      "line": 53,
+      "symbol": "def interventional_loss",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Flow-matching objective",
+      "paper_ref": "Fig. 2",
+      "file": "src/respire/losses/flow_matching.py",
+      "line": 18,
+      "symbol": "def flow_matching_loss",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Dual ascent",
+      "paper_ref": "Eq. (4)",
+      "file": "src/respire/losses/lagrangian.py",
+      "line": 19,
+      "symbol": "class DualAscent",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Trust region",
+      "paper_ref": "Eq. (4)",
+      "file": "src/respire/losses/trust_region.py",
+      "line": 53,
+      "symbol": "def backtrack",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Three latent axes",
+      "paper_ref": "Sec. 1",
+      "file": "src/respire/theatre/patient.py",
+      "line": 29,
+      "symbol": "AXIS_SENSITIVITY",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Eleveld propofol model",
+      "paper_ref": "Sec. 5.1",
+      "file": "src/respire/theatre/pharmacokinetics.py",
+      "line": 68,
+      "symbol": "def propofol_parameters",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Minto remifentanil model",
+      "paper_ref": "Sec. 5.1",
+      "file": "src/respire/theatre/pharmacokinetics.py",
+      "line": 110,
+      "symbol": "def remifentanil_parameters",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Cohort",
+      "paper_ref": "Sec. 5.1",
+      "file": "src/respire/theatre/patient.py",
+      "line": 82,
+      "symbol": "def sample_patients",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Surgical schedule",
+      "paper_ref": "Sec. 1, Sec. 3.1",
+      "file": "src/respire/theatre/surgical.py",
+      "line": 53,
+      "symbol": "def build_schedule",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Primary comparison",
+      "paper_ref": "Table 1, Table 3",
+      "file": "src/respire/evaluation/comparison.py",
+      "line": 97,
+      "symbol": "def build_comparison",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Component analysis",
+      "paper_ref": "Table 2",
+      "file": "src/respire/flags.py",
+      "line": 80,
+      "symbol": "COMPONENTS",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Bootstrap interval",
+      "paper_ref": "Table 3",
+      "file": "src/respire/metrics/statistics.py",
+      "line": 21,
+      "symbol": "def bootstrap_interval",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Sign-flip test",
+      "paper_ref": "Table 3",
+      "file": "src/respire/metrics/statistics.py",
+      "line": 39,
+      "symbol": "def sign_flip_pvalue",
+      "status": "MAPPED"
+    },
+    {
+      "claim": "Quartile stratification",
+      "paper_ref": "Fig. 5",
+      "file": "src/respire/metrics/stratify.py",
+      "line": 29,
+      "symbol": "def benefit_shares",
+      "status": "MAPPED"
+    }
+  ],
+  "deviations": [
+    {
+      "item": "engineer defaults for unstated values",
+      "detail": "The article does not print the learning rates, batch sizes, epoch counts, the drug-cost weight, the coverage level alpha, the admitted fraction, the trust radius, the number of sparse atoms or the cloning passes. Every such value is a documented engineering default in configs/round/primary.yaml, marked with a comment where it appears."
+    },
+    {
+      "item": "critic-based realisation of the maximisation term",
+      "detail": "Eq. (4) maximises the verifier's expectation over the policy. With a flow the expectation has no closed form, so the release maximises a return critic fitted on admitted episodes and keeps the flow-matching term as the density anchor. The deviation is the estimator, not the constraint."
+    },
+    {
+      "item": "constraint normalisation in the dual",
+      "detail": "The three costs and the trust region are divided by their budgets before the dual step, so one learning rate serves all four multipliers. This is a reparametrisation of the same Lagrangian."
+    },
+    {
+      "item": "axis anchoring on the theatre",
+      "detail": "The three axes are anchored weakly to the generating factors, which only the theatre can supply. On record-level replay there is no anchor and the interventional term carries the axes alone."
+    },
+    {
+      "item": "record-level corpora are not shipped",
+      "detail": "VitalDB, MIMIC-IV and eICU-CRD are credentialed. The release ships the theatre, the readers for the official export layouts, and no substituted cohort."
+    }
+  ]
+}

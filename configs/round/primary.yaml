@@ -1,0 +1,183 @@
+# Primary document. Every value printed in the article appears here; the two comments mark the
+# set that the article does not print and that this release therefore fixes as an engineering
+# default. Nothing in this file is a result.
+
+name: primary
+seed: 11
+output_dir: runs
+
+theatre:
+  dt_s: 5.0                 # Sec. 3.1: one decision every five seconds
+  horizon_min: 120.0        # Sec. 5.1: 120-minute episodes
+  bis_target: 50.0          # Eq. (1)
+  bis_noise_sd: 2.1         # Sec. 6.1: the 2.1 index-unit noise floor
+  map_floor: 65.0           # Eq. (2), c(1)
+  bis_suppression: 20.0     # Eq. (2), c(2)
+  gamma: 0.995              # Eq. (1)
+  drug_cost_weight: 0.02    # engineering default: lambda_u is not printed
+  propofol_scale: 10.0
+  remifentanil_scale: 0.5
+  propofol_max: 12.0
+  remifentanil_max: 0.5
+  substeps: 4
+
+pharmacokinetics:
+  propofol_v1: 6.28
+  propofol_v2: 25.5
+  propofol_v3: 273.0
+  propofol_cl: 1.79
+  propofol_q2: 1.75
+  propofol_q3: 1.11
+  propofol_ke0: 0.146
+  remifentanil_v1: 5.1
+  remifentanil_v2: 9.82
+  remifentanil_v3: 5.42
+  remifentanil_cl: 2.6
+  remifentanil_q2: 2.05
+  remifentanil_q3: 0.61
+  remifentanil_ke0: 0.595
+  weight_exponent: 0.75
+  age_exponent: -0.25
+  effect_site_exponent: -0.25
+
+pharmacodynamics:
+  bis_awake: 93.5
+  bis_floor: 6.5
+  propofol_c50: 3.0
+  propofol_hill: 1.5
+  remifentanil_c50: 10.0
+  remifentanil_hill: 2.0
+  opioid_synergy: 0.35
+  map_baseline: 88.0
+  map_propofol_slope: 7.5
+  map_remifentanil_slope: 10.0
+  map_insufflation_slope: 0.55
+  map_trendelenburg_gain: 4.5
+  map_stimulation_gain: 6.0
+  map_tau_s: 45.0
+  hr_baseline: 70.0
+  hr_baroreflex: 0.65
+  hr_remifentanil_slope: 15.0
+  hr_tau_s: 30.0
+  spo2_baseline: 98.5
+  spo2_depth_gain: 0.35
+  etco2_baseline: 34.0
+  etco2_depth_gain: 0.45
+
+surgical:
+  pneumo_pressure_mmHg: 12.0
+  insufflation_onset_min: 8.0
+  insufflation_ramp_min: 3.0
+  trendelenburg_onset_min: 10.0
+  trendelenburg_fraction: 0.6
+  stimulation_rate_per_h: 6.0
+  stimulation_duration_s: 60.0
+  stimulation_gain_sd: 0.3
+  blood_loss_ml_per_min: 1.4
+  blood_loss_onset_min: 20.0
+  rocuronium_bolus_min: [5.0, 35.0, 75.0]
+
+cohort:
+  n_patients: 2000          # Sec. 5.1: 2,000 patients
+  train_episodes: 20000     # Sec. 5.1
+  eval_episodes: 2000       # Sec. 5.1
+  encoder_cases: 192        # engineering default: development cases per rollout batch
+  variability: 1.25         # Sec. 5.1: individual variability inflated by 1.25
+  weight_mean: 74.0
+  weight_sd: 13.0
+  height_mean: 168.0
+  height_sd: 9.0
+  age_mean: 52.0
+  age_sd: 15.0
+  female_fraction: 0.46
+  sensitivity_sd: 1.0
+  seed: 7
+
+encoder:
+  n_channels: 12            # Sec. 3.1 and Fig. 2: twelve intraoperative channels
+  window_steps: 12          # Fig. 2: 60-s window at a 5-s cadence
+  window_s: 60.0
+  n_blocks: 6               # Fig. 2: six selective SSM blocks
+  d_model: 64               # engineering default
+  d_state: 16
+  d_conv: 4
+  expand: 2
+  n_heads: 4
+  latent_dim: 16            # Fig. 2: z in R^16
+  axis_dim: 3               # Sec. 1: three interpretable axes
+  hidden_dim: 32
+  sparse_topk: 4            # Fig. 2: sparse readout
+  action_channels: 2
+  dropout: 0.0
+  lr: 0.0003
+  weight_decay: 0.0001
+  batch_size: 128
+  epochs: 8
+  interventional_weight: 0.5
+  one_step_horizon: 1
+
+verifier:
+  hidden: [640, 320]
+  feature_dim: 256
+  target_params: 400000.0   # Fig. 2: a 0.4M-parameter verifier
+  param_tolerance: 0.05
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 256
+  epochs: 6
+  ensemble: 1
+
+policy:
+  action_dim: 2
+  hidden: 128
+  depth: 3
+  time_features: 16
+  euler_steps: 4            # Fig. 2: four Euler steps
+  latent_dim: 16
+  hidden_state_dim: 32
+  axis_dim: 3
+  lr: 0.0003
+  weight_decay: 0.0001
+  batch_size: 512
+  epochs: 6
+  bc_epochs: 12            # engineering default: cloning passes before the first round
+  grad_clip: 1.0
+  sigma_min: 0.0001
+
+shield:
+  map_floor: 65.0
+  safety_margin: 3.0        # engineering default
+  lipschitz: 1.0
+  noise_eta: 2.0
+  grid_points: 25
+
+rounds:
+  rounds: 5                 # Fig. 4: the curve is read to round five
+  alpha: 0.1                # engineering default: the coverage level is not printed
+  delta: 0.05               # Sec. 3.2: quoted with the sample-size example
+  epsilon: 0.01             # Sec. 3.2: quoted with the sample-size example
+  admitted_fraction: 0.5    # Algorithm 1: the admitted fraction rho
+  trust_region: 0.08
+  kl_weight: 1.0
+  dual_lr: 0.05
+  dual_init: 0.1
+  cost_budget_hypotension_min: 10.0   # Sec. 3.1: d1
+  cost_budget_suppression_min: 1.0    # Sec. 3.1: d2
+  cost_budget_variability_quantile: 0.9
+  coverage_se_multiple: 2.0           # Algorithm 1 line 8
+  pool_episodes: 512
+  reference_episodes: 512
+  calibration_fraction: 0.5
+  replay_fraction: 0.3
+  perturb_fraction: 0.05
+  backtrack_steps: 6
+
+evaluation:
+  heldout_cases: 226        # Table 1: 226 held-out robot-assisted cases
+  robot_assisted_cases: 1132
+  seeds: 5                  # Table 1: means over five initialisations
+  bootstrap_samples: 2000
+  bootstrap_alpha: 0.05
+  permutation_samples: 5000
+  quartiles: 4
+  depth_noise_floor: 2.1

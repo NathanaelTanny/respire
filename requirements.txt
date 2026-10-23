@@ -1,0 +1,5 @@
+# Runtime dependencies. Versions are floors; the release was verified on the versions below.
+numpy>=1.26,<3
+scipy>=1.11,<2
+torch>=2.2
+PyYAML>=6.0

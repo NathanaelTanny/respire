@@ -1,0 +1,13 @@
+# Section document: the analytic shield and the one-step pressure model it projects with.
+
+shield:
+  map_floor: 65.0
+  safety_margin: 3.0
+  lipschitz: 1.0
+  noise_eta: 2.0
+  grid_points: 25
+
+rounds:
+  trust_region: 0.08
+  kl_weight: 1.0
+  backtrack_steps: 6

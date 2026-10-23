@@ -1,0 +1,15 @@
+# Access points checked on 2026-10-23; every URL below answered 200 and its page describes the
+# corpus this release uses.
+#
+# name | url | version | licence and route | role
+VitalDB | https://vitaldb.net/ | v1 | registration under the VitalDB data use agreement, then export | intraoperative corpus; the 4,806 records of which 1,132 are robot-assisted and 226 are held out
+VitalDB (PhysioNet mirror) | https://physionet.org/content/vitaldb/1.0.0/ | 1.0.0 | Open Access on PhysioNet after accepting the terms | the same corpus, used for the waveform channels
+MIMIC-IV | https://physionet.org/content/mimiciv/3.1/ | 3.1 | ODbL 1.0 with the PhysioNet Credentialed Health Data Licence: CITI training and a signed agreement | cross-setting arm; 4,124 admissions filtered to 1,876 sedation episodes
+eICU-CRD | https://physionet.org/content/eicu-crd/2.0/ | 2.0 | ODbL 1.0 with the PhysioNet Credentialed Health Data Licence: CITI training and a signed agreement | cross-setting hypotension and drug-consumption arm
+
+# The cohort needs no download: it is sampled from the two published pharmacokinetic models
+# cited by the article (Eleveld 2018 for propofol, Minto 1997 for remifentanil) by
+# respire.theatre.patient.sample_patients, and is reproducible from the seed alone.
+#
+# None of the three corpora may be redistributed. This release therefore ships no record-level data
+# and no cohort checkpoint, in line with the article's own statement.

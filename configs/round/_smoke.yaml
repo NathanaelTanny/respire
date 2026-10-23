@@ -1,0 +1,137 @@
+# for unit-test smoke only; do not use for reporting
+name: smoke
+seed: 3
+output_dir: runs
+
+theatre:
+  dt_s: 5.0
+  horizon_min: 24.0
+  bis_target: 50.0
+  bis_noise_sd: 2.1
+  map_floor: 65.0
+  bis_suppression: 20.0
+  gamma: 0.995
+  drug_cost_weight: 0.02
+  propofol_scale: 10.0
+  remifentanil_scale: 0.5
+  propofol_max: 12.0
+  remifentanil_max: 0.5
+  substeps: 3
+
+surgical:
+  pneumo_pressure_mmHg: 12.0
+  insufflation_onset_min: 3.0
+  insufflation_ramp_min: 2.0
+  trendelenburg_onset_min: 4.0
+  trendelenburg_fraction: 0.6
+  stimulation_rate_per_h: 8.0
+  stimulation_duration_s: 40.0
+  stimulation_gain_sd: 0.3
+  blood_loss_ml_per_min: 1.4
+  blood_loss_onset_min: 6.0
+  rocuronium_bolus_min: [2.0, 8.0, 16.0]
+
+cohort:
+  n_patients: 48
+  train_episodes: 32
+  eval_episodes: 8
+  encoder_cases: 24
+  variability: 1.25
+  weight_mean: 74.0
+  weight_sd: 13.0
+  height_mean: 168.0
+  height_sd: 9.0
+  age_mean: 52.0
+  age_sd: 15.0
+  female_fraction: 0.46
+  sensitivity_sd: 1.0
+  seed: 5
+
+encoder:
+  n_channels: 12
+  window_steps: 12
+  window_s: 60.0
+  n_blocks: 6
+  d_model: 32
+  d_state: 8
+  d_conv: 4
+  expand: 2
+  n_heads: 4
+  latent_dim: 16
+  axis_dim: 3
+  hidden_dim: 32
+  sparse_topk: 4
+  action_channels: 2
+  dropout: 0.0
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 32
+  epochs: 4
+  interventional_weight: 0.5
+  one_step_horizon: 1
+
+verifier:
+  hidden: [256, 128]
+  feature_dim: 128
+  target_params: 400000.0
+  param_tolerance: 0.05
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 32
+  epochs: 4
+  ensemble: 1
+
+policy:
+  action_dim: 2
+  hidden: 32
+  depth: 2
+  time_features: 8
+  euler_steps: 4
+  latent_dim: 16
+  hidden_state_dim: 32
+  axis_dim: 3
+  lr: 0.001
+  weight_decay: 0.0001
+  batch_size: 32
+  epochs: 2
+  bc_epochs: 6
+  grad_clip: 1.0
+  sigma_min: 0.0001
+
+shield:
+  map_floor: 65.0
+  safety_margin: 3.0
+  lipschitz: 1.0
+  noise_eta: 2.0
+  grid_points: 9
+
+rounds:
+  rounds: 2
+  alpha: 0.1
+  delta: 0.05
+  epsilon: 0.01
+  admitted_fraction: 0.5
+  trust_region: 0.5
+  kl_weight: 1.0
+  dual_lr: 0.05
+  dual_init: 0.1
+  cost_budget_hypotension_min: 10.0
+  cost_budget_suppression_min: 1.0
+  cost_budget_variability_quantile: 0.9
+  coverage_se_multiple: 2.0
+  pool_episodes: 48
+  reference_episodes: 48
+  calibration_fraction: 0.5
+  replay_fraction: 0.3
+  perturb_fraction: 0.1
+  backtrack_steps: 3
+
+evaluation:
+  heldout_cases: 8
+  robot_assisted_cases: 16
+  seeds: 2
+  bootstrap_samples: 200
+  bootstrap_alpha: 0.05
+  permutation_samples: 200
+  quartiles: 4
+  depth_noise_floor: 2.1

@@ -1,0 +1,962 @@
+{
+  "paper": {
+    "title": "Recursive Self-Improving Reinforcement Learning with Latent Physiological Pattern Recognition for Closed-Loop Anaesthesia in Robotic Surgery",
+    "system": "ReSPIRe",
+    "venue_style": "Elsevier single-column manuscript, Pattern Recognition reference family",
+    "corpora": {
+      "vitaldb": "intraoperative records; 4,806 records of which 1,132 robot-assisted; 226 held out",
+      "mimic_iv": "4,124 admissions filtered to 1,876 episodes",
+      "eicu_crd": "cross-setting arm for hypotension and drug consumption",
+      "cohort": "2,000 Eleveld-Minto patients, 20,000 training and 2,000 evaluation episodes"
+    }
+  },
+  "scope": "The release was verified in three families: the article's arithmetic recomputed from its own printed numbers, the package inspected against the structural claims of the method, and the package executed (seed 11, full pipeline run). Record-level claims are blocked because the corpora are credentialed.",
+  "summary": {
+    "checks": 58,
+    "passed": 41,
+    "failed": 6,
+    "not_run": 0,
+    "blocked": 11
+  },
+  "families": [
+    {
+      "name": "code_vs_paper",
+      "checks": 15,
+      "passed": 15,
+      "failed": 0,
+      "not_run": 0,
+      "blocked": 0
+    },
+    {
+      "name": "execution",
+      "checks": 14,
+      "passed": 14,
+      "failed": 0,
+      "not_run": 0,
+      "blocked": 0
+    },
+    {
+      "name": "manuscript_arithmetic",
+      "checks": 18,
+      "passed": 12,
+      "failed": 6,
+      "not_run": 0,
+      "blocked": 0
+    },
+    {
+      "name": "record_level",
+      "checks": 11,
+      "passed": 0,
+      "failed": 0,
+      "not_run": 0,
+      "blocked": 11
+    }
+  ],
+  "code_status": "CODE_VERIFIED",
+  "manuscript_status": "DISCREPANCIES_RECORDED",
+  "overall": "PARTIALLY_VERIFIED",
+  "manuscript_discrepancies": [
+    {
+      "id": "M03",
+      "claim": "The conclusion states the propofol difference as a reduction",
+      "finding": "Table 1 gives 6.96 for ReSPIRe against 6.79 for DreamerV3 and the abstract reads 'at 2.5% higher propofol', but the conclusion reads '2.5% is lower in price than propofol'. The sign of the same quantity is stated both ways.",
+      "paper_ref": "Sec. 7 versus Abstract and Table 1"
+    },
+    {
+      "id": "M11",
+      "claim": "The printed denominator of the sample-size example is the squared margin",
+      "finding": "The text writes '2 log(80)/0.032', which is 2 log(80) divided by 0.032 and gives 274, while the sentence's own result of 9,700 requires (g - 2 epsilon)^2 = 0.03^2. The superscript is lost in the printed expression.",
+      "paper_ref": "Sec. 3.2 (sentence following Corollary 1)"
+    },
+    {
+      "id": "M12",
+      "claim": "The reported value of the biased recursion is (c-1) a_k^2",
+      "finding": "The maximiser is a_{k+1} = (c/2) a_k and the value there is (c^2/4) a_k^2, not (c-1) a_k^2. At c=1.5 the two are 0.562 and 0.500; they agree only at c=2, so the printed growth condition c>1 does not follow from the printed model, while the divergence condition c>2 does.",
+      "paper_ref": "Proposition 2, Sec. 3.3"
+    },
+    {
+      "id": "M13",
+      "claim": "Every column of the primary table is defined in the text",
+      "finding": "The final column of Table 1 is headed 'Ind.' and is never defined in the article, the captions or the appendix, so no reader can recompute it. The column 'MAP AUC' is called 'Pressure-time area' in Table 3 with identical values, so one quantity carries two names and one column carries none.",
+      "paper_ref": "Table 1 versus Table 3 and Sec. 3.1"
+    },
+    {
+      "id": "M14",
+      "claim": "The primary table reports means over five initialisations for every learned row",
+      "finding": "The caption states that values are means over five initialisations, but four of the thirteen rows are deterministic controllers (two target-controlled infusions, a PID and an internal-model controller) whose output does not depend on an initialisation. The caption over-states the design for those rows.",
+      "paper_ref": "Table 1 caption"
+    },
+    {
+      "id": "M15",
+      "claim": "A hard shield leaves a non-zero violation rate of 1.9%",
+      "finding": "The shield is described as an analytic projection applied to the delivered action, so a violation can only occur when no admissible action exists. A rate of 1.9% is therefore either a pre-projection counter or a measure of infeasible states, and the article does not say which. This release counts pre-projection requests and reports infeasible states separately.",
+      "paper_ref": "Sec. 4 (shield) versus Table 3 (shield violations)"
+    }
+  ],
+  "blocked_claims": [
+    "R01",
+    "R02",
+    "R03",
+    "R04",
+    "R05",
+    "R06",
+    "R07",
+    "R08",
+    "R09",
+    "R10",
+    "R11"
+  ],
+  "interpretation": "The code status describes the package; the manuscript status describes the article's internal arithmetic. They are reported apart so a discrepancy inside the article's own tables is not mistaken for a broken release.",
+  "environment": {
+    "python": "3.14.0",
+    "torch": "2.11.0",
+    "seconds": 109.1
+  },
+  "checks": [
+    {
+      "id": "M01",
+      "family": "manuscript_arithmetic",
+      "claim": "The recursion lowers rate variability by 38.0%",
+      "paper_ref": "Abstract; Table 1; Sec. 7",
+      "method": "Recompute the relative change from Table 1's rate-variability column",
+      "status": "PASS",
+      "detail": "(0.71 - 0.44) / 0.71 = 38.028%",
+      "evidence": {
+        "computed": 38.028
+      }
+    },
+    {
+      "id": "M02",
+      "family": "manuscript_arithmetic",
+      "claim": "ReSPIRe uses 2.5% more propofol than the strongest unconstrained arm",
+      "paper_ref": "Abstract; Table 1",
+      "method": "Recompute the relative change from Table 1's propofol column",
+      "status": "PASS",
+      "detail": "(6.96 - 6.79) / 6.79 = 2.504%",
+      "evidence": {
+        "computed": 2.504
+      }
+    },
+    {
+      "id": "M03",
+      "family": "manuscript_arithmetic",
+      "claim": "The conclusion states the propofol difference as a reduction",
+      "paper_ref": "Sec. 7 versus Abstract and Table 1",
+      "method": "Compare the conclusion's direction with Table 1's column",
+      "status": "FAIL",
+      "detail": "Table 1 gives 6.96 for ReSPIRe against 6.79 for DreamerV3 and the abstract reads 'at 2.5% higher propofol', but the conclusion reads '2.5% is lower in price than propofol'. The sign of the same quantity is stated both ways.",
+      "evidence": {
+        "table": [
+          6.96,
+          6.79
+        ],
+        "abstract": "higher",
+        "conclusion": "lower"
+      }
+    },
+    {
+      "id": "M04",
+      "family": "manuscript_arithmetic",
+      "claim": "Every difference column in the safety table is the stated subtraction",
+      "paper_ref": "Table 3",
+      "method": "Subtract the two printed columns for each event and compare with the printed difference",
+      "status": "PASS",
+      "detail": "all five differences reproduce; mismatches: {}",
+      "evidence": {
+        "computed": {
+          "hypotension": -6.4,
+          "burst": -2.3,
+          "pressure_area": -8.5,
+          "rate_variability": -0.27,
+          "shield": -6.8
+        }
+      }
+    },
+    {
+      "id": "M05",
+      "family": "manuscript_arithmetic",
+      "claim": "One point of the hypotension difference is about fourteen cases of 226",
+      "paper_ref": "Sec. 6.1",
+      "method": "Multiply the case count by the difference in percentage points",
+      "status": "PASS",
+      "detail": "226 x 6.4% = 14.46 cases",
+      "evidence": {
+        "computed": 14.464
+      }
+    },
+    {
+      "id": "M06",
+      "family": "manuscript_arithmetic",
+      "claim": "One point of the suppression difference is about five cases",
+      "paper_ref": "Sec. 6.1",
+      "method": "Multiply the case count by the difference in percentage points",
+      "status": "PASS",
+      "detail": "226 x 2.3% = 5.20 cases",
+      "evidence": {
+        "computed": 5.198
+      }
+    },
+    {
+      "id": "M07",
+      "family": "manuscript_arithmetic",
+      "claim": "The safety improvement is about forty-four percent of the unconstrained rate",
+      "paper_ref": "Sec. 6.1",
+      "method": "Divide the difference by the unconstrained arm's rate",
+      "status": "PASS",
+      "detail": "6.4 / 14.6 = 43.84%",
+      "evidence": {
+        "computed": 43.836
+      }
+    },
+    {
+      "id": "M08",
+      "family": "manuscript_arithmetic",
+      "claim": "A tuned constrained learner closes 1.5 points and the instruments the other 4.9",
+      "paper_ref": "Abstract; Table 1 (CPPO row)",
+      "method": "Subtract the constrained arm from the unconstrained rate, then the proposed arm from it",
+      "status": "PASS",
+      "detail": "14.6 - 13.1 = 1.5; 13.1 - 8.2 = 4.9",
+      "evidence": {
+        "closed_by_learner": 1.5,
+        "closed_by_instruments": 4.9
+      }
+    },
+    {
+      "id": "M09",
+      "family": "manuscript_arithmetic",
+      "claim": "The quartile shares of the benefit sum to one hundred percent",
+      "paper_ref": "Fig. 5 (right panel)",
+      "method": "Sum the four shares printed in the right-hand panel",
+      "status": "PASS",
+      "detail": "2.9 + 5.8 + 9.3 + 82.0 = 100.0",
+      "evidence": {
+        "computed": 100.0
+      }
+    },
+    {
+      "id": "M10",
+      "family": "manuscript_arithmetic",
+      "claim": "The sample-size example needs about 9,700 episodes",
+      "paper_ref": "Corollary 1, Sec. 3.2",
+      "method": "Evaluate Eq. (6) with R=1, delta=0.05, epsilon=0.01 and g=0.05",
+      "status": "PASS",
+      "detail": "2 log(80) / 0.03^2 = 9737.8",
+      "evidence": {
+        "computed": 9737.84
+      }
+    },
+    {
+      "id": "M11",
+      "family": "manuscript_arithmetic",
+      "claim": "The printed denominator of the sample-size example is the squared margin",
+      "paper_ref": "Sec. 3.2 (sentence following Corollary 1)",
+      "method": "Read the printed expression against Eq. (6)",
+      "status": "FAIL",
+      "detail": "The text writes '2 log(80)/0.032', which is 2 log(80) divided by 0.032 and gives 274, while the sentence's own result of 9,700 requires (g - 2 epsilon)^2 = 0.03^2. The superscript is lost in the printed expression.",
+      "evidence": {
+        "printed": "0.032",
+        "required": "0.03^2",
+        "value_with_printed_denominator": 273.9
+      }
+    },
+    {
+      "id": "M12",
+      "family": "manuscript_arithmetic",
+      "claim": "The reported value of the biased recursion is (c-1) a_k^2",
+      "paper_ref": "Proposition 2, Sec. 3.3",
+      "method": "Maximise V(a) = -a^2 + c a_k a, substitute the maximiser and compare with the printed form",
+      "status": "FAIL",
+      "detail": "The maximiser is a_{k+1} = (c/2) a_k and the value there is (c^2/4) a_k^2, not (c-1) a_k^2. At c=1.5 the two are 0.562 and 0.500; they agree only at c=2, so the printed growth condition c>1 does not follow from the printed model, while the divergence condition c>2 does.",
+      "evidence": {
+        "c": 1.5,
+        "exact": 0.5625,
+        "printed": 0.5
+      }
+    },
+    {
+      "id": "M13",
+      "family": "manuscript_arithmetic",
+      "claim": "Every column of the primary table is defined in the text",
+      "paper_ref": "Table 1 versus Table 3 and Sec. 3.1",
+      "method": "Search the article for a definition of each column header",
+      "status": "FAIL",
+      "detail": "The final column of Table 1 is headed 'Ind.' and is never defined in the article, the captions or the appendix, so no reader can recompute it. The column 'MAP AUC' is called 'Pressure-time area' in Table 3 with identical values, so one quantity carries two names and one column carries none.",
+      "evidence": {
+        "undefined_columns": [
+          "Ind."
+        ],
+        "renamed": {
+          "MAP AUC": "Pressure-time area"
+        }
+      }
+    },
+    {
+      "id": "M14",
+      "family": "manuscript_arithmetic",
+      "claim": "The primary table reports means over five initialisations for every learned row",
+      "paper_ref": "Table 1 caption",
+      "method": "Count the rows for which an initialisation exists",
+      "status": "FAIL",
+      "detail": "The caption states that values are means over five initialisations, but four of the thirteen rows are deterministic controllers (two target-controlled infusions, a PID and an internal-model controller) whose output does not depend on an initialisation. The caption over-states the design for those rows.",
+      "evidence": {
+        "deterministic_rows": [
+          "Schnider TCU",
+          "Eleveld TCU",
+          "PID",
+          "Internal model"
+        ]
+      }
+    },
+    {
+      "id": "M15",
+      "family": "manuscript_arithmetic",
+      "claim": "A hard shield leaves a non-zero violation rate of 1.9%",
+      "paper_ref": "Sec. 4 (shield) versus Table 3 (shield violations)",
+      "method": "Compare the shield's definition with the violation row of the safety table",
+      "status": "FAIL",
+      "detail": "The shield is described as an analytic projection applied to the delivered action, so a violation can only occur when no admissible action exists. A rate of 1.9% is therefore either a pre-projection counter or a measure of infeasible states, and the article does not say which. This release counts pre-projection requests and reports infeasible states separately.",
+      "evidence": {
+        "reported": 1.9,
+        "definition": "pre-projection request count in this release"
+      }
+    },
+    {
+      "id": "M16",
+      "family": "manuscript_arithmetic",
+      "claim": "The sedation corpus keeps 1,876 of 4,124 admissions after filtering",
+      "paper_ref": "Sec. 5.1; Abstract",
+      "method": "Check that the retained count is smaller than the screened count and consistent with the abstract",
+      "status": "PASS",
+      "detail": "1,876 / 4,124 = 45.5% retained",
+      "evidence": {
+        "retained_fraction": 45.49
+      }
+    },
+    {
+      "id": "M17",
+      "family": "manuscript_arithmetic",
+      "claim": "The held-out robot-assisted cohort is a fifth of the robot-assisted records",
+      "paper_ref": "Sec. 5.1; Table 1 caption",
+      "method": "Divide the held-out case count by the robot-assisted count",
+      "status": "PASS",
+      "detail": "226 / 1,132 = 19.96%",
+      "evidence": {
+        "computed": 19.965
+      }
+    },
+    {
+      "id": "M18",
+      "family": "manuscript_arithmetic",
+      "claim": "The cohort supplies 20,000 training and 2,000 evaluation episodes",
+      "paper_ref": "Sec. 5.1",
+      "method": "Read the episode counts against the patient count",
+      "status": "PASS",
+      "detail": "20,000 training episodes from 2,000 patients (10 per patient) and 2,000 evaluation episodes",
+      "evidence": {
+        "train": 20000,
+        "evaluation": 2000,
+        "patients": 2000
+      }
+    },
+    {
+      "id": "S01",
+      "family": "code_vs_paper",
+      "claim": "The encoder is six selective state-space blocks",
+      "paper_ref": "Fig. 2; Sec. 4.2",
+      "method": "Count the blocks in the constructed encoder",
+      "status": "PASS",
+      "detail": "6 blocks",
+      "evidence": {
+        "blocks": 6,
+        "expects": 6
+      }
+    },
+    {
+      "id": "S02",
+      "family": "code_vs_paper",
+      "claim": "The observation is twelve channels over a sixty-second window",
+      "paper_ref": "Sec. 3.1; Fig. 2",
+      "method": "Read the channel schema and the configured window",
+      "status": "PASS",
+      "detail": "12 channels, 12 steps of 5.0 s",
+      "evidence": {
+        "channels": [
+          "bis",
+          "heart_rate",
+          "map",
+          "systolic",
+          "diastolic",
+          "spo2",
+          "etco2",
+          "temperature",
+          "train_of_four",
+          "dopamine",
+          "propranolol",
+          "pneumo_pressure"
+        ]
+      }
+    },
+    {
+      "id": "S03",
+      "family": "code_vs_paper",
+      "claim": "The latent is sixteen-dimensional with a sparse readout and three axes",
+      "paper_ref": "Fig. 2; Sec. 1",
+      "method": "Read the configured widths and the number of atoms selected by the readout",
+      "status": "PASS",
+      "detail": "z in R^16, s in R^3, top-4 of 32 atoms",
+      "evidence": {
+        "latent": 16,
+        "axes": 3,
+        "topk": 4
+      }
+    },
+    {
+      "id": "S04",
+      "family": "code_vs_paper",
+      "claim": "The verifier has about 0.4 million parameters",
+      "paper_ref": "Fig. 2",
+      "method": "Build the verifier from the primary document and count its trainable parameters",
+      "status": "PASS",
+      "detail": "384,322 parameters (3.9% from 4.0e5)",
+      "evidence": {
+        "parameters": 384322,
+        "tolerance": 0.05
+      }
+    },
+    {
+      "id": "S05",
+      "family": "code_vs_paper",
+      "claim": "The policy is a flow with four Euler steps",
+      "paper_ref": "Fig. 2; Algorithm 2 line 4",
+      "method": "Read the configured integrator length",
+      "status": "PASS",
+      "detail": "4 Euler steps",
+      "evidence": {
+        "euler_steps": 4
+      }
+    },
+    {
+      "id": "S06",
+      "family": "code_vs_paper",
+      "claim": "The reward is the depth error and the drug cost with gamma 0.995 and a target of 50",
+      "paper_ref": "Eq. (1), Eq. (2)",
+      "method": "Read the theatre constants and locate the reward in the environment",
+      "status": "PASS",
+      "detail": "gamma 0.995, BIS* 50, floor 65, suppression 20",
+      "evidence": {
+        "gamma": 0.995,
+        "target": 50.0,
+        "floor": 65.0,
+        "suppression": 20.0,
+        "reward_line": 272
+      }
+    },
+    {
+      "id": "S07",
+      "family": "code_vs_paper",
+      "claim": "The budgets are ten minutes, one minute and the ninetieth percentile",
+      "paper_ref": "Sec. 3.1",
+      "method": "Read the configured budgets and confirm the variability budget is computed from the cohort",
+      "status": "PASS",
+      "detail": "d1 = 10 min, d2 = 1 min, d3 = 90th percentile of the logged variability",
+      "evidence": {
+        "quantile_line": 262
+      }
+    },
+    {
+      "id": "S08",
+      "family": "code_vs_paper",
+      "claim": "The certificate uses the ceil((n+1)(1-alpha)) rank of the residual",
+      "paper_ref": "Proposition 1, Eq. (5)",
+      "method": "Compare the rank returned by the implementation with the rank computed here",
+      "status": "PASS",
+      "detail": "n=20, alpha=0.1, rank=19, quantile=19.0",
+      "evidence": {
+        "rank": 19,
+        "quantile": 19.0
+      }
+    },
+    {
+      "id": "S09",
+      "family": "code_vs_paper",
+      "claim": "Every line of Algorithm 1 has a home in the package",
+      "paper_ref": "Algorithm 1",
+      "method": "Locate each step of the algorithm in the driver",
+      "status": "PASS",
+      "detail": "line 1 one-step pressure model:134, line 2 behaviour cloning initialisation:179, line 3 verifier fit on generated and replayed returns:271, line 5 pool draw:282, line 6 conformal quantile:294, line 7 admitted set:296, line 8 coverage test:328, line 11 refit on admitted plus reference:335",
+      "evidence": {
+        "line 1 one-step pressure model": 134,
+        "line 2 behaviour cloning initialisation": 179,
+        "line 3 verifier fit on generated and replayed returns": 271,
+        "line 5 pool draw": 282,
+        "line 6 conformal quantile": 294,
+        "line 7 admitted set": 296,
+        "line 8 coverage test": 328,
+        "line 11 refit on admitted plus reference": 335
+      }
+    },
+    {
+      "id": "S10",
+      "family": "code_vs_paper",
+      "claim": "Every line of Algorithm 2 has a home in the package",
+      "paper_ref": "Algorithm 2",
+      "method": "Locate each step of the deployment loop",
+      "status": "PASS",
+      "detail": "line 1 warm start and adaptation:99, line 3 recurrent update:93, line 4 four-step sampling:104, line 5 shield:114, line 7 supervisor override:92, line 11 case record:97",
+      "evidence": {
+        "line 1 warm start and adaptation": 99,
+        "line 3 recurrent update": 93,
+        "line 4 four-step sampling": 104,
+        "line 5 shield": 114,
+        "line 7 supervisor override": 92,
+        "line 11 case record": 97
+      }
+    },
+    {
+      "id": "S11",
+      "family": "code_vs_paper",
+      "claim": "The operator maximises the certified value under cost constraints and a KL radius",
+      "paper_ref": "Eq. (4)",
+      "method": "Confirm that both the KL term and the radius are present, and that the costs carry multipliers",
+      "status": "PASS",
+      "detail": "penalty and hard radius are both implemented",
+      "evidence": {
+        "penalty_line": 110,
+        "radius_line": 119
+      }
+    },
+    {
+      "id": "S12",
+      "family": "code_vs_paper",
+      "claim": "The comparison contains the thirteen arms of the primary table",
+      "paper_ref": "Table 1",
+      "method": "Read the arm registry",
+      "status": "PASS",
+      "detail": "13 arms: bc, cppo, cql, dreamer, eleveld_tcu, internal_model, iql, pid, ppo, ppo_lagr, sac, schnider_tcu, td3bc",
+      "evidence": {
+        "arms": [
+          "bc",
+          "cppo",
+          "cql",
+          "dreamer",
+          "eleveld_tcu",
+          "internal_model",
+          "iql",
+          "pid",
+          "ppo",
+          "ppo_lagr",
+          "sac",
+          "schnider_tcu",
+          "td3bc"
+        ]
+      }
+    },
+    {
+      "id": "S13",
+      "family": "code_vs_paper",
+      "claim": "The component analysis removes eight elements one at a time",
+      "paper_ref": "Table 2",
+      "method": "Read the variant list",
+      "status": "PASS",
+      "detail": "8 removable elements plus the full model",
+      "evidence": {
+        "variants": [
+          "full",
+          "no latent axes",
+          "no interventional loss",
+          "no recursive operator",
+          "no conformal certificate",
+          "no shield",
+          "no Lagrangian costs",
+          "no test-time adaptation",
+          "no flow head"
+        ]
+      }
+    },
+    {
+      "id": "S14",
+      "family": "code_vs_paper",
+      "claim": "Three interpretable axes are defined, not merely three free dimensions",
+      "paper_ref": "Sec. 1; Fig. 2",
+      "method": "Confirm the axis constants and that the encoder exposes an axis head of width three",
+      "status": "PASS",
+      "detail": "sensitivity, pressure responsiveness and reserve",
+      "evidence": {
+        "axis_head_width": 3
+      }
+    },
+    {
+      "id": "S15",
+      "family": "code_vs_paper",
+      "claim": "No configuration document carries a reported result",
+      "paper_ref": "Table 1-3",
+      "method": "Walk every YAML leaf and compare it with the values printed in the result tables",
+      "status": "PASS",
+      "detail": "6 documents scanned; offending leaves: []",
+      "evidence": {
+        "documents": [
+          "flow_policy.yaml",
+          "shield.yaml",
+          "lppe.yaml",
+          "_smoke.yaml",
+          "primary.yaml",
+          "eleveld_adult.yaml"
+        ],
+        "offenders": []
+      }
+    },
+    {
+      "id": "E01",
+      "family": "execution",
+      "claim": "A forward pass produces the three outputs and a backward pass reaches the parameters",
+      "paper_ref": "Fig. 2",
+      "method": "Run the encoder on a real window batch and backpropagate a scalar",
+      "status": "PASS",
+      "detail": "124 of 124 parameter tensors received a non-zero gradient; latent (140, 16)",
+      "evidence": {
+        "latents": [
+          140,
+          16
+        ],
+        "gradients": 124,
+        "parameters": 124
+      }
+    },
+    {
+      "id": "E02",
+      "family": "execution",
+      "claim": "The flow's sampled density agrees with the density read at the sampled action",
+      "paper_ref": "Eq. (4) (KL term needs a density)",
+      "method": "Compare the divergence accumulated during sampling with a reverse integration at the same action",
+      "status": "PASS",
+      "detail": "mean absolute gap 0.1573 over 64 samples",
+      "evidence": {
+        "gap": 0.15731382369995117
+      }
+    },
+    {
+      "id": "E03",
+      "family": "execution",
+      "claim": "Six optimisation steps lower the loss and change the parameters",
+      "paper_ref": "Sec. 4.2 (encoder is fitted once)",
+      "method": "Train on one fixed batch and compare the first and last loss",
+      "status": "PASS",
+      "detail": "loss 0.0162 -> 0.0068; 114 parameter tensors moved",
+      "evidence": {
+        "first": 0.01618250086903572,
+        "last": 0.006813776679337025,
+        "moved": 114
+      }
+    },
+    {
+      "id": "E04",
+      "family": "execution",
+      "claim": "The certificate reaches its target coverage on an exchangeable pool",
+      "paper_ref": "Proposition 1, Eq. (5)",
+      "method": "Rebuild the rank quantile with numpy-free arithmetic here and measure coverage on a fresh pool",
+      "status": "PASS",
+      "detail": "coverage 0.951 against a target of 0.900 with n=2000",
+      "evidence": {
+        "coverage": 0.9505000114440918,
+        "quantile": 15.800968170166016
+      }
+    },
+    {
+      "id": "E05",
+      "family": "execution",
+      "claim": "Coverage fails when the pool is not exchangeable with the reference",
+      "paper_ref": "Sec. 3.2 (the exchangeability caveat)",
+      "method": "Repeat the measurement on a pool shifted by five standard deviations",
+      "status": "PASS",
+      "detail": "coverage 0.003 on the shifted pool",
+      "evidence": {
+        "shifted_coverage": 0.003000000026077032
+      }
+    },
+    {
+      "id": "E06",
+      "family": "execution",
+      "claim": "The package's quantile equals the rank computed independently",
+      "paper_ref": "Proposition 1",
+      "method": "Compare the implementation with ceil((n+1)(1-alpha)) evaluated in this script",
+      "status": "PASS",
+      "detail": "implementation 19.0, independent 19.0",
+      "evidence": {
+        "implementation": 19.0,
+        "independent": 19.0
+      }
+    },
+    {
+      "id": "E07",
+      "family": "execution",
+      "claim": "Eq. (6) is evaluated rather than quoted",
+      "paper_ref": "Corollary 1",
+      "method": "Compare the release's sample size with an inline evaluation",
+      "status": "PASS",
+      "detail": "9737.84 against 9737.84",
+      "evidence": {
+        "release": 9737.836965941957,
+        "independent": 9737.836965941957
+      }
+    },
+    {
+      "id": "E08",
+      "family": "execution",
+      "claim": "Eq. (7) is evaluated rather than quoted",
+      "paper_ref": "Theorem 1, Eq. (7)",
+      "method": "Compare the release's bound with an inline evaluation of its three terms",
+      "status": "PASS",
+      "detail": "total 0.050058 against 0.050058",
+      "evidence": {
+        "release": 0.050058453824581725,
+        "independent": 0.050058453824581725
+      }
+    },
+    {
+      "id": "E09",
+      "family": "execution",
+      "claim": "The biased recursion agrees with the printed form only at c = 2",
+      "paper_ref": "Proposition 2",
+      "method": "Run the trajectory at c = 2 and at c = 1.5 and compare the two readings of the reported value",
+      "status": "PASS",
+      "detail": "c=2 agrees to machine precision, c=1.5 differs by 0.0352",
+      "evidence": {
+        "at_two": 1.0,
+        "at_one_point_five": 0.31640625
+      }
+    },
+    {
+      "id": "E10",
+      "family": "execution",
+      "claim": "The one-step pressure model recovers a linear surface and the shield only lowers the rate",
+      "paper_ref": "Sec. 4 (analytic shield)",
+      "method": "Fit the model on a manufactured surface, then project a maximal request",
+      "status": "PASS",
+      "detail": "max absolute residual 0.00011; projection never raises the hypnotic rate",
+      "evidence": {
+        "residual": 0.00011444091796875,
+        "monotone": true,
+        "feasible": 0
+      }
+    },
+    {
+      "id": "E11",
+      "family": "execution",
+      "claim": "A complete episode runs without a non-finite value",
+      "paper_ref": "Sec. 3.1",
+      "method": "Roll the behaviour policy over a real batch and check every recorded quantity",
+      "status": "PASS",
+      "detail": "4 cases x 288 steps, return mean -3919.1",
+      "evidence": {
+        "return_mean": -3919.0615234375
+      }
+    },
+    {
+      "id": "E12",
+      "family": "execution",
+      "claim": "A checkpoint reloads to the same function and the same seed",
+      "paper_ref": "Sec. 4 (the encoder is frozen between rounds)",
+      "method": "Write a bundle, read it back and compare the latent on the same input",
+      "status": "PASS",
+      "detail": "identical outputs: True; seed 11",
+      "evidence": {
+        "identical": true,
+        "seed": 11
+      }
+    },
+    {
+      "id": "E13",
+      "family": "execution",
+      "claim": "The recursion runs end to end and reports a certified curve",
+      "paper_ref": "Algorithm 1; Fig. 4",
+      "method": "Execute the pipeline on the smoke document and read the round log",
+      "status": "PASS",
+      "detail": "2 rounds in 103.0 s; certified curve [-1.012, -0.944]; coverage [1.0, 0.917]",
+      "evidence": {
+        "rounds": 2,
+        "certified": [
+          -1.011675550350998,
+          -0.9444052454373115
+        ],
+        "coverage": [
+          1.0,
+          0.9166666865348816
+        ],
+        "evaluation": {
+          "bis_mae": 19.891525268554688,
+          "tib": 27.08333432674408,
+          "hypotension": 0.0,
+          "burst": 0.0,
+          "pressure_area": 0.0,
+          "propofol": 6.617680549621582,
+          "rate_variability": 3.923342704772949
+        },
+        "behaviour": {
+          "bis_mae": 19.62754249572754,
+          "tib": 29.86111044883728,
+          "hypotension": 0.0,
+          "burst": 0.0,
+          "pressure_area": 0.0,
+          "propofol": 7.34197998046875,
+          "rate_variability": 0.230131596326828
+        },
+        "seconds": 103.0
+      }
+    },
+    {
+      "id": "E14",
+      "family": "execution",
+      "claim": "The deployment path is deterministic under a pinned generator",
+      "paper_ref": "Algorithm 2",
+      "method": "Act twice on the same observation with the sampling noise pinned",
+      "status": "PASS",
+      "detail": "identical actions: True",
+      "evidence": {
+        "identical": true
+      }
+    },
+    {
+      "id": "R01",
+      "family": "record_level",
+      "claim": "Depth error 7.26 against 7.18 for the strongest unconstrained arm",
+      "paper_ref": "Table 1",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R02",
+      "family": "record_level",
+      "claim": "Sustained hypotension falls from 14.6% to 8.2%",
+      "paper_ref": "Table 1, Table 3",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R03",
+      "family": "record_level",
+      "claim": "Burst suppression falls from 4.4% to 2.1%",
+      "paper_ref": "Table 1, Table 3",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R04",
+      "family": "record_level",
+      "claim": "Propofol consumption is 6.96 against 6.79",
+      "paper_ref": "Table 1",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R05",
+      "family": "record_level",
+      "claim": "The sensitivity axis predicts the measured requirement with r = 0.68",
+      "paper_ref": "Fig. 5",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R06",
+      "family": "record_level",
+      "claim": "Eighty-two percent of the benefit accrues to the upper quartile",
+      "paper_ref": "Fig. 5",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R07",
+      "family": "record_level",
+      "claim": "The 226 held-out robot-assisted cases reproduce the primary table",
+      "paper_ref": "Table 1",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R08",
+      "family": "record_level",
+      "claim": "The four-round certified return rises from 0.612 to 0.768",
+      "paper_ref": "Fig. 4",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R09",
+      "family": "record_level",
+      "claim": "The uncalibrated operator degrades by 4.1% at round three",
+      "paper_ref": "Fig. 4",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R10",
+      "family": "record_level",
+      "claim": "Site-free transfer to the intensive-care cohort preserves the axis",
+      "paper_ref": "Fig. 5",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    },
+    {
+      "id": "R11",
+      "family": "record_level",
+      "claim": "The case readers parse an exported record into the twelve-channel block",
+      "paper_ref": "respire.data.exports",
+      "method": "Replay the credited corpora and recompute the statistic",
+      "status": "BLOCKED",
+      "detail": "VitalDB requires a data-use agreement and MIMIC-IV and eICU-CRD require credentialed access; the article states that neither the records nor a cohort checkpoint are redistributed. No external cohort is substituted, so the statistic cannot be recomputed here.",
+      "evidence": {
+        "access": "credentialed",
+        "shipped": false
+      }
+    }
+  ]
+}

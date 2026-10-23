@@ -1,0 +1,21 @@
+Third-party material referenced by this release
+
+Pharmacokinetic and pharmacodynamic structure
+    The four-state mammillary transport with an effect compartment, and the sigmoid depth surface,
+    follow the published propofol and remifentanil models cited by the manuscript:
+      - Eleveld, Colin, Absalom and Struys, British Journal of Anaesthesia 120(5), 2018
+      - Minto et al., Anesthesiology 86(1), 1997
+      - Schnider et al., Anesthesiology 88(5), 1998 (comparison arm only)
+    The typical-value parameter sets are arithmetic constants of those models. The covariate
+    exponents used here are allometric defaults, not values reprinted from those papers, and are
+    marked as such in src/respire/sim/pharmacokinetics.py.
+
+Corpora
+    MIMIC-IV, eICU-CRD and VitalDB are governed by their own access agreements and are not
+    redistributed in this repository. Access routes are recorded in dataset_urls.txt. The release
+    ships readers for their official export layouts and no copy of any record.
+
+Software
+    torch (BSD-3-Clause), numpy (BSD-3-Clause), scipy (BSD-3-Clause), PyYAML (MIT).
+    The selective state-space block is an independent implementation of the discretised
+    input-dependent recurrence; no code from any external state-space library is included.
